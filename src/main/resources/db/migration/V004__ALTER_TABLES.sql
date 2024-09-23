@@ -1,0 +1,2 @@
+--Alteração das tabelas
+ALTER TABLE TB_CONTATOS ADD COLUMN ativo BOOLEAN DEFAULT TRUE;

@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "whatsapp.env.token",
+    "type": "java.lang.String",
+    "description": "A description for 'whatsapp.env.token'"
+  },
+  {
+    "name": "whatsapp.env.api",
+    "type": "java.lang.String",
+    "description": "A description for 'whatsapp.env.api'"
+  },
+  {
+    "name": "twilio.phone.from",
+    "type": "java.lang.String",
+    "description": "A description for 'twilio.phone.from'"
+  },
+  {
+    "name": "twilio.key",
+    "type": "java.lang.String",
+    "description": "A description for 'twilio.key'"
+  },
+  {
+    "name": "twilio.sid",
+    "type": "java.lang.String",
+    "description": "A description for 'twilio.sid'"
+  },
+  {
+    "name": "whatsapp.env.img",
+    "type": "java.lang.String",
+    "description": "A description for 'whatsapp.env.img'"
+  }
+]}

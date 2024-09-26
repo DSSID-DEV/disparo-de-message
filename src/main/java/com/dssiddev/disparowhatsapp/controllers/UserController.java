@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3005", maxAge = 3600)
+@CrossOrigin(origins = "https://feature-dev--e-post.netlify.app/", maxAge = 3600)
 @RequestMapping("/users")
 public class UserController {
 

@@ -117,8 +117,9 @@ public class ContatoService {
 		}
 	}
 
-
 	private String obterNomeVCF(String line) {
+		if(line.replace("FN:", "").length() < 2 ||
+		 line.replace("FN:.", "").startsWith(".")) return Constantes.SEM_NOME;
 		String dado = line.split(":")[1].isBlank() ? "" : line.split(":")[1];
 		log.info(String.format("linha: %s com o dado: %s", line, dado));
 		if(line.startsWith("FN")) return dado.isBlank() ||

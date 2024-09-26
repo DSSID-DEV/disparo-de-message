@@ -93,54 +93,63 @@ public class WhatsAppService {
 	private void sendWhatsapp(PayloadDTO payload, String sessionId) throws IOException {
 		List<Contato> contatos = contatoRepository.findAll();
 		log.info(String.format("Lista de contatos carregados com %s contatos!", contatos.size()));
+		String naoQuerReceberMensagem = criarDePermissao();
 		for (Contato contato :  contatos) {
-//			String jsonTemplate = templateFormatJson();
-			var mensagemEnviada = new MensagemEnviadaDTO();
-			String saudacao = criarSaudacao(contato);
-//			String message = jsonTemplate.replace("{saudacao}", criarSaudacao());
-			log.info(String.format("Envio de saudação via whatsapp com a saudacao: %s", saudacao));
-			sendMessageText(contato, saudacao, useSessionId(sessionId));
-			mensagemEnviada.setSaudacao(saudacao);
-			if(!payload.getTitulo().isBlank()) {
-				log.info(String.format("Envio do título da mensagem via whatsapp com o título: %s", payload.getTitulo()));
-				sendMessageText(contato, payload.getTitulo(), useSessionId(sessionId));
+			if(contato.isAtivo()) {
+	//			String jsonTemplate = templateFormatJson();
+					var mensagemEnviada = new MensagemEnviadaDTO();
+					String saudacao = criarSaudacao(contato);
+	//			String message = jsonTemplate.replace("{saudacao}", criarSaudacao());
+				log.info(String.format("Envio de saudação via whatsapp com a saudacao: %s", saudacao));
+				sendMessageText(contato, saudacao, useSessionId(sessionId));
+				mensagemEnviada.setSaudacao(saudacao);
+				if (!payload.getTitulo().isBlank()) {
+					log.info(String.format("Envio do título da mensagem via whatsapp com o título: %s", payload.getTitulo()));
+					sendMessageText(contato, payload.getTitulo(), useSessionId(sessionId));
 //				message = message.replace("{titulo}", payload.getTitulo());
-				mensagemEnviada.setTitulo(payload.getTitulo());
-			}
+					mensagemEnviada.setTitulo(payload.getTitulo());
+				}
 
-			if(payload.getFile() != null) {
-				log.info(String.format("Envio de arquivo via whatsapp com o arquivo: %s", payload.getFile().getName()));
-				sendArquivo(contato, payload.getFile(), useSessionId(sessionId));
+				if (payload.getFile() != null) {
+					log.info(String.format("Envio de arquivo via whatsapp com o arquivo: %s", payload.getFile().getName()));
+					sendArquivo(contato, payload.getFile(), useSessionId(sessionId));
 //				message = message.replace("{arquivo}", payload.getFile().getName());
-				mensagemEnviada.setArquivo(payload.getFile().getName());
-			}
+					mensagemEnviada.setArquivo(payload.getFile().getName());
+				}
 
-			if(!payload.getMensagem().isBlank()) {
-				log.info(String.format("Envio da mensagem via whatsapp com a mensagem: %s", payload.getMensagem()));
-				sendMessageText(contato, payload.getMensagem(), useSessionId(sessionId));
+				if (!payload.getMensagem().isBlank()) {
+					log.info(String.format("Envio da mensagem via whatsapp com a mensagem: %s", payload.getMensagem()));
+					sendMessageText(contato, payload.getMensagem(), useSessionId(sessionId));
 //				message = message.replace("{message}", payload.getMensagem());
-				mensagemEnviada.setMensagem(payload.getMensagem());
-			}
+					mensagemEnviada.setMensagem(payload.getMensagem());
+				}
 
-			if(!payload.getLink().isBlank()) {
-				log.info(String.format("Envio link via whatsapp com o link: %s", payload.getLink()));
-				sendMessageText(contato, payload.getLink(), useSessionId(sessionId));
+				if (!payload.getLink().isBlank()) {
+					log.info(String.format("Envio link via whatsapp com o link: %s", payload.getLink()));
+					sendMessageText(contato, payload.getLink(), useSessionId(sessionId));
 //				message = message.replace("{link}", payload.getLink());
-				mensagemEnviada.setLink(payload.getLink());
-			}
+					mensagemEnviada.setLink(payload.getLink());
+				}
 
-			if(!payload.getConclusao().isBlank()) {
-				log.info(String.format("Envio da conclusão via whatsapp com o conclusão: %s", payload.getConclusao()));
-				sendMessageText(contato, payload.getConclusao(), useSessionId(sessionId));
+				if (!payload.getConclusao().isBlank()) {
+					log.info(String.format("Envio da conclusão via whatsapp com o conclusão: %s", payload.getConclusao()));
+					sendMessageText(contato, payload.getConclusao(), useSessionId(sessionId));
 //				message = message.replace("{conclusao}", payload.getConclusao());
-				mensagemEnviada.setConclusao(payload.getConclusao());
-			}
-			mensagemEnviada.addContato(contato);
-			this.mensagensEnviadas.add(mensagemEnviada);
-			try {
-				Thread.sleep(200);
-			}catch (InterruptedException Ie) {
-				Ie.printStackTrace();
+					mensagemEnviada.setConclusao(payload.getConclusao());
+				}
+
+				log.info(String.format("Envio de permissão para envio: %s", naoQuerReceberMensagem));
+				sendMessageText(contato, naoQuerReceberMensagem, useSessionId(sessionId));
+				mensagemEnviada.setConclusao(naoQuerReceberMensagem);
+
+				mensagemEnviada.addContato(contato);
+				this.mensagensEnviadas.add(mensagemEnviada);
+
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException Ie) {
+					Ie.printStackTrace();
+				}
 			}
 		}
 
@@ -305,6 +314,13 @@ public class WhatsAppService {
 			log.error("Erro ao tentar enviar mensagem de whatsapp: ", e.getMessage());
 		}
 		return response;
+	}
+
+	private String criarDePermissao() {
+		StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("_Se este conteúdo não faz sentido para você ou se você não quer receber mensagem com este conteúdo")
+				.append("envie uma mensagem com a palavra_ SAIR*");
+		return strBuilder.append("!*").toString();
 	}
 
 	private ContatoDTO remover(String telefone) {

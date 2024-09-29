@@ -27,7 +27,7 @@ import java.util.Collection;
 @Slf4j
 @PermitAll
 @RestController
-@CrossOrigin(origins = "https://feature-dev--e-post.netlify.app/", maxAge = 3600)
+@CrossOrigin(origins = "https://feature-dev--e-post.netlify.app", maxAge = 3600)
 @RequestMapping("/auth")
 public class AutenticationController {
 

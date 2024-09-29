@@ -128,7 +128,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("https://feature-dev--e-post.netlify.app"));
+		configuration.setAllowedOrigins(List.of("https://e-post.netlify.app"));
 		configuration.setAllowedMethods(List.of("POST", "GET", "DELETE", "PUT", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
